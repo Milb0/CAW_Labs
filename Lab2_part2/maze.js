@@ -50,8 +50,7 @@ end.addEventListener("mouseenter", function () {
 var start = document.getElementById("start");
 var end = document.getElementById("end");
 var boundaries = document.querySelectorAll(".boundary");
-
-/* Used in the 6th Exercise solution */
+// Used in the sixth exercise
 var statusElement = document.getElementById("status");
 
 var atStart = false;
@@ -60,29 +59,39 @@ var lost = false;
 
 function handleLoss() {
   lost = true;
-  statusElement.textContent = "You lose. The game is over.";
+  // 6th exercise
+  statusElement.textContent = "You lose. The game is over. Click on 'S' to restart.";
   boundaries.forEach(function (boundary) {
     boundary.style.backgroundColor = "red";
   });
 }
+
 function handleWin() {
-  statusElement.textContent = "You win! You've successfully completed the maze.";
+  // 6th exercise
+  statusElement.textContent = "You win! Click on 'S' to restart.";
   mazeCompleted = true;
+  start.textContent = "S";
+  start.style.backgroundColor = "#88ff88";
 }
+
 start.addEventListener("mouseenter", function () {
-  atStart = true;
-  mazeCompleted = false;
-  lost = false; 
-  boundaries.forEach(function (boundary) {
-    boundary.style.backgroundColor = "#eeeeee";
-  });
-  statusElement.textContent = "Move your mouse over the 'S' to begin.";
+  if (!mazeCompleted) {
+    atStart = true;
+    lost = false;
+    boundaries.forEach(function (boundary) {
+      boundary.style.backgroundColor = "#eeeeee";
+    });
+    // 6th exercise
+    statusElement.textContent = "Get the End to win beware of the boundaries.";
+  }
 });
+
 end.addEventListener("mouseenter", function () {
   if (atStart && !mazeCompleted && !lost) {
     handleWin();
   }
 });
+
 boundaries.forEach(function (boundary) {
   boundary.addEventListener("mouseenter", function () {
     if (atStart && !mazeCompleted) {
@@ -91,20 +100,29 @@ boundaries.forEach(function (boundary) {
   });
 });
 
+start.addEventListener("click", function () {
+  if (mazeCompleted) {
+    mazeCompleted = false;
+    atStart = false;
+    start.textContent = "S";
+    start.style.backgroundColor = "#88ff88";
+    boundaries.forEach(function (boundary) {
+      boundary.style.backgroundColor = "#eeeeee";
+    });
+    // 6th exercise
+    statusElement.textContent = "Move your mouse over the 'S' to begin.";
+  }
+});
+
 /*Exercise 7*/
 // Checks if the user moves out of the maze boundaries after starting the game.
 document.addEventListener("mousemove", function (event) {
   if (atStart && !mazeCompleted && !lost) {
-    // Check if the mouse is outside the maze
-    if (
-      event.target !== start &&
-      event.target !== end &&
-      !Array.from(boundaries).includes(event.target)
-    ) {
-      // Handle a loss if the user moves outside the maze
+    if (!document.getElementById("maze").contains(event.target)) {
       handleLoss();
     }
   }
 });
+
 
 });
