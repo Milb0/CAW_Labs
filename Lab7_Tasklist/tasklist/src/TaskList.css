@@ -1,0 +1,10 @@
+.task-list-container {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .tasks {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
