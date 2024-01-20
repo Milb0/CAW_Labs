@@ -50,29 +50,50 @@ end.addEventListener("mouseenter", function () {
 var start = document.getElementById("start");
 var end = document.getElementById("end");
 var boundaries = document.querySelectorAll(".boundary");
-// Used in the sixth exercise
 var statusElement = document.getElementById("status");
+var winsElement = document.getElementById("wins");
+var lossesElement = document.getElementById("losses");
 
 var atStart = false;
 var mazeCompleted = false;
 var lost = false;
 
+// Load user's progress from localStorage
+var wins = parseInt(localStorage.getItem("wins")) || 0;
+var losses = parseInt(localStorage.getItem("losses")) || 0;
+
+function updateHistory() {
+  winsElement.textContent = wins;
+  lossesElement.textContent = losses;
+}
+
 function handleLoss() {
-  lost = true;
-  // 6th exercise
-  statusElement.textContent = "You lose. The game is over. Click on 'S' to restart.";
-  boundaries.forEach(function (boundary) {
-    boundary.style.backgroundColor = "red";
-  });
+  if (!lost) {
+    lost = true;
+    statusElement.textContent = "You lose. The game is over. Click on 'S' to restart.";
+    boundaries.forEach(function (boundary) {
+      boundary.style.backgroundColor = "red";
+    });
+    losses++;
+    updateHistory();
+    // Save the updated losses to localStorage
+    localStorage.setItem("losses", losses);
+  }
 }
 
 function handleWin() {
-  // 6th exercise
   statusElement.textContent = "You win! Click on 'S' to restart.";
   mazeCompleted = true;
   start.textContent = "S";
   start.style.backgroundColor = "#88ff88";
+  wins++;
+  updateHistory();
+  // Save the updated wins to localStorage
+  localStorage.setItem("wins", wins);
 }
+
+// Load user's progress on page load
+updateHistory();
 
 start.addEventListener("mouseenter", function () {
   if (!mazeCompleted) {
@@ -81,8 +102,7 @@ start.addEventListener("mouseenter", function () {
     boundaries.forEach(function (boundary) {
       boundary.style.backgroundColor = "#eeeeee";
     });
-    // 6th exercise
-    statusElement.textContent = "Get the End to win beware of the boundaries.";
+    statusElement.textContent = "Get to the End to win. Beware of the boundaries.";
   }
 });
 
@@ -109,13 +129,10 @@ start.addEventListener("click", function () {
     boundaries.forEach(function (boundary) {
       boundary.style.backgroundColor = "#eeeeee";
     });
-    // 6th exercise
     statusElement.textContent = "Move your mouse over the 'S' to begin.";
   }
 });
 
-/*Exercise 7*/
-// Checks if the user moves out of the maze boundaries after starting the game.
 document.addEventListener("mousemove", function (event) {
   if (atStart && !mazeCompleted && !lost) {
     if (!document.getElementById("maze").contains(event.target)) {
@@ -123,6 +140,7 @@ document.addEventListener("mousemove", function (event) {
     }
   }
 });
+
 
 
 });
